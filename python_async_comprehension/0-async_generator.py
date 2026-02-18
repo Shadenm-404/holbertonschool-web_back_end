@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-'''Task 0's module.
+'''Task 1's module.
 '''
-import asyncio
-import random
-from typing import Generator
+from typing import List
+from importlib import import_module as using
 
 
-async def async_generator() -> Generator[float, None, None]:
-    '''Generates a sequence of 10 numbers.
+async_generator = using('0-async_generator').async_generator
+
+
+async def async_comprehension() -> List[float]:
+    '''Creates a list of 10 numbers from a 10-number generator.
     '''
-    for _ in range(10):
-        await asyncio.sleep(1)
-        yield random.random() * 9
+    return [num async for num in async_generator()]
