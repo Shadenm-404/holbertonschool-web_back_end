@@ -33,9 +33,7 @@ class Server:
         """Dataset indexed by sorting position
         """
         if self.__indexed_dataset is None:
-
             dataset = self.dataset()
-
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
@@ -49,21 +47,21 @@ class Server:
 
         dataset = self.indexed_dataset()
 
-        assert index is not None and index >= 0 and index < len(dataset)
+        assert index is not None and index >= 0 and index <= max(dataset.keys())
 
         data = []
-        current_index = index
+        next_index = index
 
-        while len(data) < page_size and current_index < len(dataset):
+        while len(data) < page_size and next_index <= max(dataset.keys()):
 
-            if current_index in dataset:
-                data.append(dataset[current_index])
+            if next_index in dataset:
+                data.append(dataset[next_index])
 
-            current_index += 1
+            next_index += 1
 
         return {
             "index": index,
             "data": data,
-            "page_size": len(data),
-            "next_index": current_index
+            "page_size": page_size,
+            "next_index": next_index
         }
