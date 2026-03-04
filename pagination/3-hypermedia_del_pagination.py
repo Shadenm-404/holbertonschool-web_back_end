@@ -4,6 +4,7 @@ Deletion-resilient hypermedia pagination
 """
 
 import csv
+import math
 from typing import List, Dict
 
 
@@ -13,12 +14,12 @@ class Server:
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self) -> None:
-        """Initialize dataset caches."""
+        """Initialize dataset cache."""
         self.__dataset = None
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
-        """Return the cached dataset loaded from CSV."""
+        """Return cached dataset."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
@@ -35,26 +36,26 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None,
-                        page_size: int = 10) -> Dict:
-        """Return deletion-resilient paginated data."""
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """Return deletion-resilient pagination data."""
+        dataset = self.indexed_dataset()
+
         if index is None:
             index = 0
 
-        dataset = self.indexed_dataset()
-        assert 0 <= index <= max(dataset.keys())
+        assert index in dataset
 
         data = []
-        current_index = index
+        next_index = index
 
         while len(data) < page_size:
-            if current_index in dataset:
-                data.append(dataset[current_index])
-            current_index += 1
+            if next_index in dataset:
+                data.append(dataset[next_index])
+            next_index += 1
 
         return {
             "index": index,
             "data": data,
             "page_size": len(data),
-            "next_index": current_index
+            "next_index": next_index
         }
