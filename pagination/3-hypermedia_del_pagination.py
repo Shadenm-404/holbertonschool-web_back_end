@@ -11,7 +11,6 @@ from typing import List, Dict
 class Server:
     """Server class to paginate a database of popular baby names.
     """
-
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -25,7 +24,6 @@ class Server:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
-
             self.__dataset = dataset[1:]
 
         return self.__dataset
@@ -43,8 +41,7 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """
-        Return deletion-resilient pagination
+        """Return deletion-resilient pagination
         """
 
         dataset = self.indexed_dataset()
@@ -55,10 +52,8 @@ class Server:
         next_index = index
 
         while len(data) < page_size and next_index <= max(dataset.keys()):
-
             if next_index in dataset:
                 data.append(dataset[next_index])
-
             next_index += 1
 
         return {
