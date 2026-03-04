@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Deletion-resilient hypermedia pagination.
+Deletion-resilient hypermedia pagination
 """
+
 import csv
-from typing import List
-from typing import Dict
+from typing import List, Dict
 
 
 class Server:
+    """Server class to paginate a database of popular baby names.
     """
-    Server class to paginate a database of popular baby names.
-    """
+
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -18,23 +18,24 @@ class Server:
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
-        """
-        Cached dataset.
+        """Cached dataset
         """
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
+
             self.__dataset = dataset[1:]
 
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
-        """
-        Dataset indexed by sorting position.
+        """Dataset indexed by sorting position
         """
         if self.__indexed_dataset is None:
+
             dataset = self.dataset()
+
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
@@ -43,15 +44,26 @@ class Server:
 
     def get_hyper_index(self, index: int = 0, page_size: int = 10) -> Dict:
         """
-        Return deletion-resilient pagination.
+        Return deletion-resilient pagination
         """
+
         dataset = self.indexed_dataset()
 
-        assert index is not None and index < len(dataset)
+        assert index is not None and index >= 0 and index < len(dataset)
 
         data = []
-        next_index = index
+        current_index = index
 
-        while len(data) < page_size and next_index < len(dataset):
-            if next_index in
+        while len(data) < page_size and current_index < len(dataset):
 
+            if current_index in dataset:
+                data.append(dataset[current_index])
+
+            current_index += 1
+
+        return {
+            "index": index,
+            "data": data,
+            "page_size": len(data),
+            "next_index": current_index
+        }
