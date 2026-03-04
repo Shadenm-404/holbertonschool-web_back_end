@@ -37,7 +37,14 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+<<<<<<< HEAD
         """Return deletion-resilient pagination data."""
+=======
+        """
+        Return deletion-resilient pagination
+        """
+
+>>>>>>> dceb337 (save local changes)
         dataset = self.indexed_dataset()
 
         if index is None:
