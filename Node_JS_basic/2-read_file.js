@@ -30,6 +30,8 @@ function countStudents(path) {
       `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`
     );
   });
+
+  return null;
 }
 
 module.exports = countStudents;
