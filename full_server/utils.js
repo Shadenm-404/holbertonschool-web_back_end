@@ -15,11 +15,7 @@ export default function readDatabase(path) {
 
       students.forEach((student) => {
         const [firstname, , , field] = student.split(',');
-
-        if (!fields[field]) {
-          fields[field] = [];
-        }
-
+        if (!fields[field]) fields[field] = [];
         fields[field].push(firstname);
       });
 
