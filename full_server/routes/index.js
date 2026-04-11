@@ -2,10 +2,10 @@ import express from 'express';
 import AppController from '../controllers/AppController';
 import StudentsController from '../controllers/StudentsController';
 
-const router = express.Router();
+const appRouter = express.Router();
 
-router.get('/', AppController.getHomepage);
-router.get('/students', StudentsController.getAllStudents);
-router.get('/students/:major', StudentsController.getAllStudentsByMajor);
+appRouter.route('/').get(AppController.getHomepage);
+appRouter.route('/students').get(StudentsController.getAllStudents);
+appRouter.route('/students/:major').get(StudentsController.getAllStudentsByMajor);
 
-export default router;
+export default appRouter;
