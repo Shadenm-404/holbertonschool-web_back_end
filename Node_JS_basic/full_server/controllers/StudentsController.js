@@ -2,7 +2,7 @@ import readDatabase from '../utils';
 
 export default class StudentsController {
   static getAllStudents(req, res) {
-    const database = process.argv[2];
+    const database = req.app.locals.database;
 
     readDatabase(database)
       .then((fields) => {
@@ -24,7 +24,7 @@ export default class StudentsController {
   }
 
   static getAllStudentsByMajor(req, res) {
-    const database = process.argv[2];
+    const database = req.app.locals.database;
     const major = req.params.major;
 
     if (major !== 'CS' && major !== 'SWE') {
