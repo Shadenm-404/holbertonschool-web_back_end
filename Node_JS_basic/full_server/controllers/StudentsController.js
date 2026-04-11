@@ -1,22 +1,21 @@
-const { readDatabase } = require('../utils');
+import readDatabase from '../utils';
 
 class StudentsController {
   static getAllStudents(req, res) {
-    const filePath = process.argv[2];
+    const dbPath = process.argv[2];
 
-    readDatabase(filePath)
-      .then((students) => {
-        const sortedFields = Object.keys(students).sort((a, b) =>
-          a.toLowerCase().localeCompare(b.toLowerCase())
-        );
+    readDatabase(dbPath)
+      .then((studentsByField) => {
+        const fields = Object.keys(studentsByField)
+          .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
-        let response = 'This is the list of our students\n';
-
-        sortedFields.forEach((field) => {
-          response += `Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}\n`;
+        const lines = ['This is the list of our students'];
+        fields.forEach((field) => {
+          const list = studentsByField[field];
+          lines.push(`Number of students in ${field}: ${list.length}. List: ${list.join(', ')}`);
         });
 
-        res.status(200).send(response.trim());
+        res.status(200).send(lines.join('\n'));
       })
       .catch(() => {
         res.status(500).send('Cannot load the database');
@@ -24,7 +23,6 @@ class StudentsController {
   }
 
   static getAllStudentsByMajor(req, res) {
-    const filePath = process.argv[2];
     const { major } = req.params;
 
     if (major !== 'CS' && major !== 'SWE') {
@@ -32,10 +30,10 @@ class StudentsController {
       return;
     }
 
-    readDatabase(filePath)
-      .then((students) => {
-        const list = students[major] || [];
-        res.status(200).send(`List: ${list.join(', ')}`);
+    const dbPath = process.argv[2];
+    readDatabase(dbPath)
+      .then((studentsByField) => {
+        res.status(200).send(`List: ${studentsByField[major].join(', ')}`);
       })
       .catch(() => {
         res.status(500).send('Cannot load the database');
@@ -43,4 +41,4 @@ class StudentsController {
   }
 }
 
-module.exports = StudentsController;
+export default StudentsController;
