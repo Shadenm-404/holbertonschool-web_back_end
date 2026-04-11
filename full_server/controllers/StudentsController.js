@@ -2,28 +2,29 @@ import readDatabase from '../utils';
 
 export default class StudentsController {
   static getAllStudents(req, res) {
-    const db = process.argv[2];
+    const database = process.argv[2];
 
-    readDatabase(db)
+    readDatabase(database)
       .then((fields) => {
-        let out = 'This is the list of our students';
-        const sorted = Object.keys(fields).sort((a, b) =>
+        let output = 'This is the list of our students';
+
+        const sortedFields = Object.keys(fields).sort((a, b) =>
           a.localeCompare(b, undefined, { sensitivity: 'base' })
         );
 
-        sorted.forEach((f) => {
-          out += `\nNumber of students in ${f}: ${fields[f].length}. List: ${fields[f].join(', ')}`;
+        sortedFields.forEach((field) => {
+          output += `\nNumber of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`;
         });
 
-        res.status(200).send(out);
+        res.status(200).send(output);
       })
-      .catch((e) => {
-        res.status(500).send(e.message);
+      .catch(() => {
+        res.status(500).send('Cannot load the database');
       });
   }
 
   static getAllStudentsByMajor(req, res) {
-    const db = process.argv[2];
+    const database = process.argv[2];
     const major = req.params.major;
 
     if (major !== 'CS' && major !== 'SWE') {
@@ -31,12 +32,16 @@ export default class StudentsController {
       return;
     }
 
-    readDatabase(db)
+    readDatabase(database)
       .then((fields) => {
+        if (!fields[major]) {
+          res.status(200).send('List: ');
+          return;
+        }
         res.status(200).send(`List: ${fields[major].join(', ')}`);
       })
-      .catch((e) => {
-        res.status(500).send(e.message);
+      .catch(() => {
+        res.status(500).send('Cannot load the database');
       });
   }
 }
