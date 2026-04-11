@@ -8,13 +8,18 @@ export default function readDatabase(path) {
         return;
       }
 
-      const lines = data.split('\n').filter((l) => l.trim() !== '');
+      const lines = data.split('\n').filter((line) => line.trim() !== '');
       const students = lines.slice(1);
 
       const fields = {};
-      students.forEach((s) => {
-        const [firstname, , , field] = s.split(',');
-        if (!fields[field]) fields[field] = [];
+
+      students.forEach((student) => {
+        const [firstname, , , field] = student.split(',');
+
+        if (!fields[field]) {
+          fields[field] = [];
+        }
+
         fields[field].push(firstname);
       });
 
