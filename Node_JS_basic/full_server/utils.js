@@ -1,9 +1,9 @@
-import fs from 'fs';
+const fs = require('fs');
 
 const readDatabase = (filePath) => new Promise((resolve, reject) => {
-  fs.readFile(filePath, 'utf8', (error, data) => {
+  fs.readFile(filePath, 'utf-8', (error, data) => {
     if (error) {
-      reject(error);
+      reject(new Error('Cannot load the database'));
       return;
     }
 
@@ -23,4 +23,4 @@ const readDatabase = (filePath) => new Promise((resolve, reject) => {
   });
 });
 
-export default readDatabase;
+module.exports = readDatabase;
